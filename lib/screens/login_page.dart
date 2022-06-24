@@ -8,7 +8,7 @@ import 'package:m_wallet_hps/network/local/cache_helper.dart';
 
 
 import 'package:m_wallet_hps/screens/home_page.dart';
-import 'package:m_wallet_hps/screens/SignUp1/SignUp1.dart';
+import 'package:m_wallet_hps/screens/SignUp1/SignUpPage1.dart';
 
 import 'package:m_wallet_hps/shared/component.dart';
 
@@ -31,9 +31,9 @@ class _LoginPageState extends State<LoginPage> {
       if (state is AppLoginSuccessStates) {
         String? token = await FirebaseMessaging.instance.getToken();
         CacheHelper.saveData(key: 'swift', value:AppCubit.get(context).element.toLowerCase() );
-          AppCubit.get(context).addTokenToUser(AppCubit.get(context).userModel?.data.email,token);
+          AppCubit.get(context).addTokenToUser(AppCubit.get(context).userModel?.data?.email,token);
         CacheHelper.saveData(key: 'token', value: state.userModel.token);
-        CacheHelper.saveData(key: 'email', value: state.userModel.data.email);
+        CacheHelper.saveData(key: 'email', value: state.userModel.data?.email);
 
 
         showToast(message: state.userModel.message);

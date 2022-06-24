@@ -6,6 +6,7 @@ class DioHelper {
     dio = Dio(BaseOptions(
       baseUrl: 'http://3.217.215.70:8081/HPS-SWITCH/',
       receiveDataWhenStatusError: true,
+
     ));
   }
 

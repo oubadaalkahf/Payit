@@ -44,7 +44,7 @@ Future<String?> getToken() async {
 
 Future<void> showMyDialog( {
   required BuildContext context,
-  required String emetteur,
+  required String? emetteur,
   required String messageController,
   required String montantController,
   required String destinataireController,

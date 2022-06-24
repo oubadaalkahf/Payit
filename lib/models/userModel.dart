@@ -1,11 +1,11 @@
 class UserModel {
   UserModel({
-    required this.data,
+     this.data,
     required this.message,
     required this.status,
     required this.token,
   });
-  late final Data data;
+   Data? data;
   late final String message;
   late final int status;
   String? token;
@@ -17,14 +17,7 @@ class UserModel {
     token = json['token'];
   }
 
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['data'] = data.toJson();
-    _data['message'] = message;
-    _data['status'] = status;
-    _data['token'] = token;
-    return _data;
-  }
+
 }
 
 class Data {

@@ -1,23 +1,28 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:m_wallet_hps/cubit/app_states.dart';
+import 'package:m_wallet_hps/models/ErrorResponse.dart';
+import 'package:m_wallet_hps/models/responseMessage.dart';
 import 'package:m_wallet_hps/models/userModel.dart';
 import 'package:m_wallet_hps/network/local/cache_helper.dart';
 import 'package:m_wallet_hps/network/remote/dio_helper.dart';
-import 'package:m_wallet_hps/screens/Confirmation2.dart';
-import 'package:m_wallet_hps/screens/SignUp1/SignUp1.dart';
-import 'package:m_wallet_hps/screens/SignUp22.dart';
+import 'package:m_wallet_hps/screens/OTP/Confirmation2.dart';
+import 'package:m_wallet_hps/screens/SignUp1/SignUpPage1.dart';
+import 'package:m_wallet_hps/screens/SignUp1/SignUpPage2.dart';
+import 'package:m_wallet_hps/screens/new_profile_page.dart';
 
-import 'package:m_wallet_hps/screens/profile_page.dart';
+
 
 import 'package:m_wallet_hps/screens/transferPage.dart';
 
 import '../screens/AcccueilScreen.dart';
 
-
 class AppCubit extends Cubit<AppStates> {
   bool verified = false;
+  bool? validPhone ;
+  bool? validCin = false;
   AppCubit() : super(AppInitialStates());
 
   String? email;
@@ -33,7 +38,7 @@ class AppCubit extends Cubit<AppStates> {
   List<Widget> bottomScreens = [
     AcccueilScreen(),
     FirstRoute(),
-    ProfilePage(),
+    NewProfilePage(),
   ];
   List<Widget> register = [
     SignupPage1(),
@@ -78,6 +83,14 @@ class AppCubit extends Cubit<AppStates> {
       emit(AppLoginErrorStates("Login Failed"));
     });
   }
+void changeValidphoneTofalse(){
+    validPhone = false;
+    emit(AppChangeValidPhone());
+}
+  void changeValidCinTofalse(){
+    validCin = false;
+    emit(AppChangeValidCin());
+  }
 
   void userSignUp({
     required String? email,
@@ -100,11 +113,15 @@ class AppCubit extends Cubit<AppStates> {
         'cin': cin,
       },
     ).then((value) {
-      emit(AppSigninSuccessStates());
-    }).catchError((error) {
-      print(error.toString());
-      emit(AppSigninErrorStates(error.toString()));
-    });
+      try {
+        userModel = UserModel.fromJson(value.data);
+        emit(AppSigninSuccessStates());
+      } catch (e) {
+        ErrorResponse error = ErrorResponse.fromJson(value.data);
+        print(error.message);
+        emit(AppSigninErrorStates(error.message.toString()));
+      }
+    }).catchError((error) {});
   }
 
   void addTokenToUser(email, deviceToken) {
@@ -144,7 +161,9 @@ class AppCubit extends Cubit<AppStates> {
         userModel = UserModel.fromJson(value.data);
         emit(LoadLoggedInUserSuccessStates());
       }).catchError((error) {
-        print(error.toString());
+        if (error is DioError) {
+          print(error.message);
+        }
         emit(LoadLoggedInUserErrorStates());
       });
     }
@@ -167,32 +186,30 @@ class AppCubit extends Cubit<AppStates> {
       emit(AppVirementErrorStates());
     });
   }
-  void sendOtp(String phone){
-emit(AppSendOtpInitialState());
-DioHelper.postData(url: "otp/send", data: {
-  "phoneNumber" : phone
-}).then((value) {
-  print("OTP SEND SUCCESS");
-  emit(AppSendOtpSuccessState(value.data));
-} ).catchError((error){
-  print(error.toString());
-  emit(AppSendOtpErrorState());
-});
-  }
-  
-  void verifyOtp(String otp){
-    emit(AppVerifyOtpInitialState()); 
-  DioHelper.postData(url: "otp/verify", data: {
-    "phoneNumber" : phone_number,
-    "otp" : otp
-  }).then((value) {
-    verified = true;
-    emit(AppVerifyOtpSuccessState(value.data));
 
-  } ).catchError((error){
-    emit(AppVerifyOtpErrorState(error.toString()));
-    print(error.toString());
-  });
+  void sendOtp(String phone) {
+    emit(AppSendOtpInitialState());
+    DioHelper.postData(url: "otp/send", data: {"phoneNumber": phone})
+        .then((value) {
+      print("OTP SEND SUCCESS");
+      emit(AppSendOtpSuccessState(value.data));
+    }).catchError((error) {
+      print(error.toString());
+      emit(AppSendOtpErrorState());
+    });
+  }
+
+  void verifyOtp(String otp) {
+    emit(AppVerifyOtpInitialState());
+    DioHelper.postData(
+        url: "otp/verify",
+        data: {"phoneNumber": phone_number, "otp": otp}).then((value) {
+      verified = true;
+      emit(AppVerifyOtpSuccessState(value.data));
+    }).catchError((error) {
+      emit(AppVerifyOtpErrorState(error.toString()));
+      print(error.toString());
+    });
   }
 
   void makeVersement(montant, message, emetteur) {
@@ -215,9 +232,45 @@ DioHelper.postData(url: "otp/send", data: {
   void changeState() {
     emit(AppChangeStates());
   }
-  
-  
-  
+  void verifyPhone(phone){
+
+    emit(AppVerifyOtpInitialState());
+    DioHelper.getData(url: "verifypn?phone_number=$phone").then((value) {
+      ResponseMessage resp = ResponseMessage.fromJson(value.data) ;
+
+      if(resp.message.contains("true")){
+        emit(AppVerifyPhoneErrorStates("phone number Already Exist"));
+
+      }
+      else {
+        validPhone = true;
+
+        emit(AppVerifyPhoneSuccessStates());
+
+      }
+    });
+  }
+
+  void verifyCin(cin){
+    print(cin);
+    emit(AppVerifyOtpInitialState());
+    DioHelper.getData(url: "verifycin?cin=$cin").then((value) {
+   ResponseMessage resp = ResponseMessage.fromJson(value.data) ;
+   if(resp.message.compareTo("true")==0){
+     emit(AppVerifyCinErrorStates("Cin Already Exist"));
+   }
+   else {
+     validCin = true;
+     emit(AppVerifyCinSuccessStates());
+
+   }
+    });
+  }
+
+  void changeStates(){
+    emit(ChangeStates());
+  }
+
 }
 
 bool jwtVerification(String token) {
@@ -229,4 +282,10 @@ bool jwtVerification(String token) {
   } else {
     return true;
   }
+
+
+
+
+
+
 }

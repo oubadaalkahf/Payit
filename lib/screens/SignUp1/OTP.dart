@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:m_wallet_hps/cubit/app_cubit.dart';
 import 'package:m_wallet_hps/cubit/app_states.dart';
 
-import 'package:m_wallet_hps/screens/SignUp22.dart';
+import 'package:m_wallet_hps/screens/SignUp1/SignUpPage2.dart';
 
 import 'package:m_wallet_hps/shared/component.dart';
 

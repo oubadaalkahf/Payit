@@ -66,7 +66,7 @@ class AcccueilScreen extends StatelessWidget {
                   margin: EdgeInsets.all(25),
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: AssetImage('asset/images/$img.png')
+                          image: AssetImage('images/$img.png')
                   )),
                 ),
               ),
@@ -182,7 +182,7 @@ class AcccueilScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "${userModel?.data.solde} MAD ",
+                      "${userModel?.data?.solde} MAD ",
                       style: const TextStyle(
                           fontSize: 22, fontWeight: FontWeight.w700),
                     ),

@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:m_wallet_hps/cubit/app_cubit.dart';
 import 'package:m_wallet_hps/cubit/app_states.dart';
 import 'package:m_wallet_hps/network/local/cache_helper.dart';
-import 'package:m_wallet_hps/screens/ConfirmationScreen.dart';
+import 'package:m_wallet_hps/screens/EmailConfirmationPage.dart';
 import 'package:m_wallet_hps/screens/SignUp1/OTP.dart';
 import 'package:m_wallet_hps/shared/component.dart';
 import 'package:dropdown_plus/dropdown_plus.dart';
@@ -13,16 +13,16 @@ import 'package:open_mail_app/open_mail_app.dart';
 
 import '../shared/buttons.dart';
 
-class ConfirmationScreen extends StatefulWidget {
+class EmailConfirmationPage extends StatefulWidget {
   static String id = "SignupScreen";
 
-  const ConfirmationScreen({Key? key}) : super(key: key);
+  const EmailConfirmationPage({Key? key}) : super(key: key);
 
   @override
-  State<ConfirmationScreen> createState() => _ConfirmationScreenState();
+  State<EmailConfirmationPage> createState() => _EmailConfirmationPageState();
 }
 
-class _ConfirmationScreenState extends State<ConfirmationScreen> {
+class _EmailConfirmationPageState extends State<EmailConfirmationPage> {
   final jobRoleCtrl = TextEditingController();
 
   final formkey = GlobalKey<FormState>();
@@ -39,7 +39,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
         if (state is AppSigninSuccessStates) {
           showToast(message: "registrated");
 
-          navigateAndFinish(context, const ConfirmationScreen());
+          navigateAndFinish(context, const EmailConfirmationPage());
         } else if (state is AppLoginErrorStates) {
           showToast(message: state.error);
         }

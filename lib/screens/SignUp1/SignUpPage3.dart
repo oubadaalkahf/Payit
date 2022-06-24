@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:m_wallet_hps/cubit/app_cubit.dart';
 import 'package:m_wallet_hps/cubit/app_states.dart';
 
-import 'package:m_wallet_hps/screens/ConfirmationScreen.dart';
+import 'package:m_wallet_hps/screens/EmailConfirmationPage.dart';
 
 import 'package:m_wallet_hps/shared/component.dart';
 
@@ -34,10 +34,11 @@ class _SignupPage3State extends State<SignupPage3> {
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {
+
         if (state is AppSigninSuccessStates) {
           showToast(message: "registrated");
-          navigateAndFinish(context, const ConfirmationScreen());
-        } else if (state is AppLoginErrorStates) {
+          navigateAndFinish(context, const EmailConfirmationPage());
+        } else if (state is AppSigninErrorStates) {
           showToast(message: state.error);
         }
       },
@@ -95,6 +96,7 @@ class _SignupPage3State extends State<SignupPage3> {
                           Container(
                             margin: EdgeInsets.only(top: 22),
                             child: TextFormField(
+
                               validator: (value) {
                                 if (value!.isEmpty) {
                                   return "the Password must not be empty";

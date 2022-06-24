@@ -19,7 +19,7 @@ class AppLoginSuccessStates extends AppStates {
 }
 
 class AppLoginErrorStates extends AppStates {
-  final String error;
+   String error;
   AppLoginErrorStates(this.error);
 }
 
@@ -34,7 +34,7 @@ class AppSigninSuccessStates extends AppStates {
 }
 
 class AppSigninErrorStates extends AppStates {
-  final String error;
+  final String? error;
   AppSigninErrorStates(this.error);
 }
 class LoginSaveTokenInitialStates extends AppStates {}
@@ -70,8 +70,29 @@ class AppChangeStates extends AppStates {}
 class AppRefreshStates extends AppStates {}
 class AppRefreshStatesStop extends AppStates {}
 
+class AppVerifyPhoneInitStates extends AppStates {}
+class AppVerifyPhoneSuccessStates extends AppStates {
+
+}
+class AppVerifyPhoneErrorStates extends AppStates {
+  final String error;
+  AppVerifyPhoneErrorStates(this.error);
+}
+
+
+class AppVerifyCinInitStates extends AppStates {}
+class ChangeStates extends AppStates {}
+class AppVerifyCinSuccessStates extends AppStates {
+
+}
+class AppVerifyCinErrorStates extends AppStates {
+  final String error;
+  AppVerifyCinErrorStates(this.error);
+}
 
 class AppSendOtpInitialState extends AppStates {}
+class AppChangeValidPhone extends AppStates {}
+class AppChangeValidCin extends AppStates {}
 class AppSendOtpSuccessState extends AppStates {
   final String message;
   AppSendOtpSuccessState(this.message);

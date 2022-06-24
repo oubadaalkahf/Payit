@@ -8,7 +8,6 @@ import 'package:m_wallet_hps/cubit/app_states.dart';
 import 'package:m_wallet_hps/screens/SignUp1/OTP.dart';
 import 'package:m_wallet_hps/shared/component.dart';
 
-
 import 'custom_page_route.dart';
 
 class SignupPage1 extends StatelessWidget {
@@ -18,9 +17,7 @@ class SignupPage1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final formkey = GlobalKey<FormState>();
-
 
     var phonenumberController = TextEditingController();
 
@@ -28,9 +25,17 @@ class SignupPage1 extends StatelessWidget {
 
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {
-     if(state is AppSendOtpSuccessState){
-       showToast(message: state.message);
-     }
+        if(state is AppVerifyPhoneSuccessStates ){
+        
+        }
+        if(state is AppVerifyCinErrorStates  )
+        {
+          showToast(message: state.error);
+        }
+        if(state is AppVerifyPhoneErrorStates  )
+        {
+          showToast(message: state.error);
+        }
       },
       builder: (context, state) => SafeArea(
         child: Scaffold(
@@ -50,6 +55,11 @@ class SignupPage1 extends StatelessWidget {
           body: Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 22),
             child: Form(
+              onChanged: (){
+                AppCubit.get(context).changeValidphoneTofalse();
+                AppCubit.get(context).changeValidCinTofalse();
+
+              },
               key: formkey,
               child: Container(
                 height: MediaQuery.of(context).size.height / 1.2,
@@ -89,11 +99,17 @@ class SignupPage1 extends StatelessWidget {
                               keyboardType: TextInputType.phone,
                               controller: phonenumberController,
                               validator: (value) {
-                                if (value!.isEmpty) {
+                                AppCubit.get(context).verifyPhone(phonenumberController.text);
+                                print(AppCubit.get(context).validPhone);
+                                if (value!.isEmpty ) {
                                   return "the Phone number must not be empty";
                                 }
-                                return null;
+                                else if(AppCubit.get(context).validPhone == false){
+                                  return "phone number Already Exist";
+                                }
+
                               },
+
                               style: GoogleFonts.manrope(
                                 fontWeight: FontWeight.w400,
                                 fontSize: 14,
@@ -122,11 +138,20 @@ class SignupPage1 extends StatelessWidget {
                             margin: const EdgeInsets.only(top: 22),
                             child: TextFormField(
                               controller: cinController,
+
                               validator: (value) {
+                                AppCubit.get(context).verifyCin(cinController.text);
                                 if (value!.isEmpty) {
                                   return "the CIN must not be empty";
-                                }
-                                return null;
+                                }else if(AppCubit.get(context).validCin ==false)
+                                  {
+                                    return    "the CIN is Already Exist";
+                                  }
+
+                              },
+                              onEditingComplete: (){
+                                AppCubit.get(context).verifyCin(cinController.text);
+                                print("hnaaaaaaaaa");
                               },
                               style: GoogleFonts.manrope(
                                 fontWeight: FontWeight.w400,
@@ -159,66 +184,25 @@ class SignupPage1 extends StatelessWidget {
                           const SizedBox(
                             height: 170,
                           ),
-                          Container(
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color:
-                                      const Color(0xff1546A0).withOpacity(0.5),
-                                  offset: const Offset(0, 24),
-                                  blurRadius: 50,
-                                  spreadRadius: -18,
-                                ),
-                              ],
-                            ),
-                            child: RaisedButton(
-                              onPressed: () {
-                                if (formkey.currentState!.validate()) {
-                                  print(phonenumberController.text);
-                                  print(cinController.text);
-                                  AppCubit.get(context)
-                                      .sendOtp(phonenumberController.text);
-                                  Navigator.of(context)
-                                      .push(CustomPageRoute(child: OTP()));
-                                  AppCubit.get(context).phone_number =
-                                      phonenumberController.text;
-                                  AppCubit.get(context).cin =
-                                      cinController.text;
-                                }
-                              },
-                              textColor: const Color(0xffFFFFFF),
-                              padding: const EdgeInsets.all(0),
-                              shape: const StadiumBorder(),
-                              child: Container(
-                                width: 275,
-                                height: 65,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  gradient: const LinearGradient(
-                                    colors: [
-                                      Colors.green,
-                                      Color(0xff1546A0),
-                                    ],
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'NEXT',
-                                      style: GoogleFonts.manrope(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        fontStyle: FontStyle.normal,
-                                      ),
-                                    ),
-                                    const Icon(Icons.navigate_next)
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
+
+
+                           Button(() {
+
+                             if (formkey.currentState!.validate()) {
+                               AppCubit.get(context)
+                                   .sendOtp(phonenumberController.text);
+                               Navigator.of(context)
+                                   .push(CustomPageRoute(child: OTP()));
+                               AppCubit.get(context).phone_number =
+                                   phonenumberController.text;
+                               AppCubit.get(context).cin =
+                                   cinController.text;
+
+
+                             }
+
+                           },)
+
                         ],
                       ),
                     ),
@@ -232,3 +216,50 @@ class SignupPage1 extends StatelessWidget {
     );
   }
 }
+
+Widget Button(fonction) => Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xff1546A0).withOpacity(0.5),
+            offset: const Offset(0, 24),
+            blurRadius: 50,
+            spreadRadius: -18,
+          ),
+        ],
+      ),
+      child: RaisedButton(
+        onPressed: fonction,
+        textColor: const Color(0xffFFFFFF),
+        padding: const EdgeInsets.all(0),
+        shape: const StadiumBorder(),
+        child: Container(
+          width: 275,
+          height: 65,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            gradient: const LinearGradient(
+              colors: [
+                Colors.green,
+                Color(0xff1546A0),
+              ],
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'NEXT',
+                style: GoogleFonts.manrope(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  fontStyle: FontStyle.normal,
+                ),
+              ),
+              const Icon(Icons.navigate_next)
+            ],
+          ),
+        ),
+      ),
+    );

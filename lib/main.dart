@@ -13,7 +13,7 @@ import 'package:m_wallet_hps/screens/AcccueilScreen.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:m_wallet_hps/screens/home_page.dart';
 import 'package:m_wallet_hps/screens/login_page.dart';
-import 'package:m_wallet_hps/screens/SignUp1/SignUp1.dart';
+import 'package:m_wallet_hps/screens/SignUp1/SignUpPage1.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:m_wallet_hps/shared/component.dart';
 import 'network/local/cache_helper.dart';

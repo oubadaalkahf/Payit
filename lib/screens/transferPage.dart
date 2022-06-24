@@ -124,8 +124,8 @@ class _FirstRouteState extends State<FirstRoute> {
                       print(destinataireController.text);
                       print(montantController.text);
                       print(messageController.text);
-                      String emetteur =
-                          AppCubit.get(context).userModel!.data.phoneNumber;
+                      String? emetteur =
+                          AppCubit.get(context).userModel!.data?.phoneNumber;
 
                       showMyDialog(
                           context: context,
@@ -196,7 +196,7 @@ class _FirstRouteState extends State<FirstRoute> {
                     ),
                     TextDropdownFormField(
                       options: [
-                        "MONSIEUR ${AppCubit.get(context).userModel?.data.firstName.toUpperCase()}  ${AppCubit.get(context).userModel?.data.lastName.toUpperCase()}  \n ${AppCubit.get(context).userModel?.data.phoneNumber}"
+                        "MONSIEUR ${AppCubit.get(context).userModel?.data?.firstName.toUpperCase()}  ${AppCubit.get(context).userModel?.data?.lastName.toUpperCase()}  \n ${AppCubit.get(context).userModel?.data?.phoneNumber}"
                       ],
                       decoration: const InputDecoration(
                           border: OutlineInputBorder(),

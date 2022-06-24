@@ -28,9 +28,15 @@ class NewProfilePage extends StatelessWidget {
             elevation: 2,
             actions: [
               IconButton(
-                  onPressed: (){
+                  onPressed:(){
+                    CacheHelper.removeData(key: 'token');
+                    CacheHelper.removeData(key: 'email');
 
-                  }, icon: Icon(Icons.logout_outlined))
+                    navigateAndFinish(context, LoginPage());
+                    AppCubit.get(context).currentIndex=0;
+                  },
+
+                  icon: Icon(Icons.logout_outlined))
             ],
             title:  Text('Profile',
               style:  GoogleFonts.pragatiNarrow(
@@ -60,9 +66,9 @@ class NewProfilePage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
 
-                          QrImage(foregroundColor: Colors.white,data: "${AppCubit.get(context).userModel?.data.phoneNumber}",size: 100,),
+                          QrImage(foregroundColor: Colors.white,data: "${AppCubit.get(context).userModel?.data?.phoneNumber}",size: 100,),
 
-                          Text("${userModel?.data.solde} DH" , style:  GoogleFonts.pragatiNarrow(
+                          Text("${userModel?.data?.solde} DH" , style:  GoogleFonts.pragatiNarrow(
                             letterSpacing: 0.5,
                             textStyle: TextStyle(
                                 color: Colors.white,
@@ -86,13 +92,13 @@ class NewProfilePage extends StatelessWidget {
                   children: [
 
                     SizedBox(height: 20,),
-                    RowBuilder(att: "First Name",text: "${userModel?.data.firstName.toUpperCase()}"),
+                    RowBuilder(att: "First Name",text: "${userModel?.data?.firstName.toUpperCase()}"),
                     SizedBox(height: 25,),
-                    RowBuilder(att: "Last Name",text: "${userModel?.data.lastName.toUpperCase()}"),
+                    RowBuilder(att: "Last Name",text: "${userModel?.data?.lastName.toUpperCase()}"),
                     SizedBox(height: 25,),
-                    RowBuilder(att: "E-mail",text: "${userModel?.data.email.toUpperCase()}"),
+                    RowBuilder(att: "E-mail",text: "${userModel?.data?.email.toUpperCase()}"),
                     SizedBox(height: 25,),
-                    RowBuilder(att: "Phone Number",text: "${userModel?.data.phoneNumber}"),
+                    RowBuilder(att: "Phone Number",text: "${userModel?.data?.phoneNumber}"),
                     SizedBox(height: 25,),
                     RowBuilder(att: "Banque",text: swift.toUpperCase()),
 

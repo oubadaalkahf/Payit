@@ -82,7 +82,7 @@ class VersementScreen extends StatelessWidget {
                     onTap: (){
 
 
-                      String emetteur = AppCubit.get(context).userModel!.data.phoneNumber;
+                      String? emetteur = AppCubit.get(context).userModel!.data?.phoneNumber;
                       AppCubit.get(context).makeVersement(montantController.text,messageController.text, emetteur);
 
                     },
